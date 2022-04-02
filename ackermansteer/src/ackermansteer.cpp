@@ -229,7 +229,12 @@ namespace gazebo {
         switch (i) {
           case FL:
           case FR:
+#if GAZEBO_MAJOR_VERSION >= 11
+            steer_ang_curr = steer_joints_[i]->Position(X);
+#else
             steer_ang_curr = steer_joints_[i]->GetAngle(X).Radian();
+#endif
+            steer_ang_curr = steer_joints_[i]->Position(X);
             steer_error = steer_ang_curr - steer_target_angles_[i];
             steer_cmd_effort = steer_PIDs_[i].Update(steer_error, step_time);
             steer_joints_[i]->SetForce(X, steer_cmd_effort);
